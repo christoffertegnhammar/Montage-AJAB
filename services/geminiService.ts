@@ -1,9 +1,16 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Job, RiskItem } from "../types";
 
+// Initialize the API client using the environment variable exclusively.
+// We assume process.env.API_KEY is available and valid as per strict guidelines.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const generateRiskSuggestions = async (job: Job): Promise<RiskItem[]> => {
+  if (!process.env.API_KEY) {
+    console.error("API Key missing. Please set API_KEY in environment variables.");
+    return [];
+  }
+
   try {
     const prompt = `
       Du är en säkerhetsexpert för portmontörer och industriarbete.
